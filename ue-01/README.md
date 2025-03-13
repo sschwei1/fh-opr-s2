@@ -1,4 +1,4 @@
-# Task 1/3 - Stack
+# Task 1 & 3 - Stack
 The stack is realized by building a single linked list. It pushes and inserts new elements in the front of the list, so the list newer needs to iterated over for simple calls.
 
 Since we only insert in the front of the list, technically our list is saved in reverse order. To print the list in the correct order, a StringBuilder is used for efficient string concatenation and also we can reverse the inserted elements to print the Stack in the correct order.
@@ -7,7 +7,7 @@ Since we only insert in the front of the list, technically our list is saved in 
 
 The only noteable inclusion in v2 is, the possibility to push a stack onto another one and clone the stack. To insert the elements in correct order, a recursive method is used.
 
-# Task 2/4 - Queue
+# Task 2 & 4 - Queue
 The queue is realized by building a single linked list. We keep a reference to the first and last element of the queue. New elements are inserted at the end and elements are removed from the front.
 
 ## V2 Changes
