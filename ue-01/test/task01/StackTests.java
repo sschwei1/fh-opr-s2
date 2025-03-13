@@ -67,14 +67,17 @@ public class StackTests {
 
         s1.clear();
         assertEquals(0, s1.elements());
+        assertEquals(Integer.MIN_VALUE, s1.peek());
 
         s1.pop();
         s1.clear();
         assertEquals(0, s1.elements());
+        assertEquals(Integer.MIN_VALUE, s1.peek());
 
         s1.push(22);
         s1.clear();
         assertEquals(0, s1.elements());
+        assertEquals(Integer.MIN_VALUE, s1.peek());
     }
 
     @Test

@@ -44,7 +44,6 @@ public class Queue {
         }
 
         Node node = new Node(val);
-        node.setPrev(this.tail);
         this.tail.setNext(node);
 
         this.tail = node;
@@ -60,6 +59,11 @@ public class Queue {
 
         int value = this.head.getData();
         this.head = this.head.getNext();
+
+        // If the queue is empty, set the tail to null
+        if(this.head == null) {
+            this.tail = null;
+        }
 
         return value;
     }
@@ -87,7 +91,6 @@ public class Queue {
     public void print() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("queue: [");
         Node current = this.head;
         while(current != null) {
             sb.append(current.getData());
@@ -97,9 +100,7 @@ public class Queue {
             current = current.getNext();
         }
 
-        sb.append("] (front -> back)");
-
         // .toString is called implicitly
-        System.out.println(sb);
+        System.out.println("queue: [" + sb + "]");
     }
 }

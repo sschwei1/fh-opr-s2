@@ -19,18 +19,28 @@ public class Stack {
         this.size = size;
     }
 
+    /**
+     * Copy constructor initializes stack with another stack.
+     * This constructor must COPY all elements of the other stack.
+     * The elements of the other stack must NOT be changed!
+     */
+    public Stack(Stack other) {
+        this(other.size);
+        insertElements(other.top, this);
+    }
+
     /*
       Deinitializes the object; think about it and comment what to do here.
       In our case it is not needed
 
-      Theoretically it can be used to close open file accesses
+      Theoretically it can be used to close open file streams
       or database connections, but in our case we only have a
       Node element which will be cleaned up by the
-      garbage collector anyways
+      garbage collector anyway
      */
-    // protected void finalize() {
-    //    ...
-    // }
+     protected void finalize() {
+
+     }
 
     /** Clears all elements from the stack */
     public void clear() {
@@ -98,10 +108,7 @@ public class Stack {
      * Clones this Stack instance and returns an exact COPY.
      */
     public Stack clone() {
-        Stack clone = new Stack(this.size);
-        insertElements(this.top, clone);
-
-        return clone;
+        return new Stack(this);
     }
 
     /*

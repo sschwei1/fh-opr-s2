@@ -180,18 +180,18 @@ public class QueueTests {
     @Test
     public void testPrint() {
         q1.print();
-        assertEquals("queue: [] (front -> back)", outContent.toString().trim());
+        assertEquals("queue: []", outContent.toString().trim());
         outContent.reset();
 
         q1.enqueue(1);
         q1.enqueue(22);
         q1.enqueue(33);
         q1.print();
-        assertEquals("queue: [1,22,33] (front -> back)", outContent.toString().trim());
+        assertEquals("queue: [1,22,33]", outContent.toString().trim());
         outContent.reset();
 
         q1.clear();
         q1.print();
-        assertEquals("queue: [] (front -> back)", outContent.toString().trim());
+        assertEquals("queue: []", outContent.toString().trim());
     }
 }
