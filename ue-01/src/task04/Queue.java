@@ -33,11 +33,13 @@ public class Queue {
     }
 
     /*
-     * Deinitializes the object; think about it and comment what to do here.
-     *
-     * Since we have single linked list, where top element
-     * is first, we use a recursive method to handle insertion
-     * in the correct order
+      Deinitializes the object; think about it and comment what to do here.
+      In our case it is not needed
+
+      Theoretically it can be used to close open file streams
+      or database connections, but in our case we only have a
+      Node element which will be cleaned up by the
+      garbage collector anyway
      */
     protected void finalize() {
 
