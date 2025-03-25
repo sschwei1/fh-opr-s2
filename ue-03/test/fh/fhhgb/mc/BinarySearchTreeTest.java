@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Random;
 
 public class BinarySearchTreeTest {
     private BinarySearchTree bst;
@@ -17,12 +18,23 @@ public class BinarySearchTreeTest {
     @Test
     public void testInsert() {
         var data = new int[]{28, 16, 34, 12, 19, 31, 49, 8, 15, 29};
-        for (int elem : data) {
-            this.bst.insert(elem);
+
+        var data2 = new int[100000];
+
+        for (int i = 0; i < data2.length; i++) {
+            data2[i] = new Random().nextInt(2000000000);
         }
 
-//        System.out.println("Inorder (ascending): " + Arrays.toString(bst.toArray(true)));
-//        System.out.println("Inorder (descending): " + Arrays.toString(bst.toArray(false)));
-        System.out.println("Postorder: " + Arrays.toString(bst.toArrayPostOrder()));
+        for (int elem : data2) {
+            bst.insert(elem);
+        }
+
+        System.out.println(bst.toString());
+
+        for (int elem : data2) {
+            bst.remove(elem);
+        }
+
+        System.out.println(bst.toString());
     }
 }
