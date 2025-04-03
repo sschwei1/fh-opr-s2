@@ -45,7 +45,7 @@ public class BinarySearchTree {
      * @param curr - current node
      * @return - true if insertion was successful, false otherwise
      */
-    protected boolean insert(int elem, BinaryTreeNode curr) {
+    private boolean insert(int elem, BinaryTreeNode curr) {
         if(curr.data == elem) {
             return false;
         }
@@ -85,7 +85,7 @@ public class BinarySearchTree {
      * @param curr - current node
      * @return - true if the key could be found, false otherwise
      */
-    protected boolean find(int key, BinaryTreeNode curr) {
+    private boolean find(int key, BinaryTreeNode curr) {
         if(curr == null) {
             return false;
         }
@@ -109,8 +109,9 @@ public class BinarySearchTree {
      * @return - true if the key could be found (and removed), false otherwise
      */
     public boolean remove(int key) {
+        int originalSize = this.size;
         this.root = this.remove(key, this.root);
-        return false;
+        return originalSize != this.size;
     }
 
     /**
@@ -120,7 +121,7 @@ public class BinarySearchTree {
      * @param curr - current node
      * @return - new node after removal
      */
-    protected BinaryTreeNode remove(int key, BinaryTreeNode curr) {
+    private BinaryTreeNode remove(int key, BinaryTreeNode curr) {
         if(curr == null) {
             return null;
         }
@@ -165,25 +166,6 @@ public class BinarySearchTree {
     }
 
     /**
-     * Returns the replacement value for the given node.
-     * This method needs to be called with "curr.right" as parameter and
-     * "curr.right != null" must be true.
-     *
-     * @param curr - right child of which we need to find the replacement
-     * @return - the replacement value
-     */
-    protected int findAndRemoveFollowupNode(BinaryTreeNode curr) {
-        int replacement = curr.data;
-
-        while(curr.left != null) {
-            replacement = curr.left.data;
-            curr = curr.left;
-        }
-
-        return replacement;
-    }
-
-    /**
      * Returns the number of elements stored in the tree.
      * @return - number of elements stored in the tree
      */
@@ -210,7 +192,7 @@ public class BinarySearchTree {
      * @param parent - parent of the current node
      * @return - parent value of the given key
      */
-    protected int getParent(int key, BinaryTreeNode curr, BinaryTreeNode parent) {
+    private int getParent(int key, BinaryTreeNode curr, BinaryTreeNode parent) {
         if(curr == null) {
             return Integer.MIN_VALUE;
         }
@@ -250,13 +232,13 @@ public class BinarySearchTree {
      * @param ascending - true for ascending order, false for descending order
      * @return - new index in the array
      */
-    protected int inOrderTraversal(BinaryTreeNode curr, int[] array, int index, boolean ascending) {
+    private int inOrderTraversal(BinaryTreeNode curr, int[] array, int index, boolean ascending) {
         if(curr == null) {
             return index;
         }
 
-        var goFirst = ascending ? curr.left : curr.right;
-        var goSecond = ascending ? curr.right : curr.left;
+        BinaryTreeNode goFirst = ascending ? curr.left : curr.right;
+        BinaryTreeNode goSecond = ascending ? curr.right : curr.left;
 
         index = this.inOrderTraversal(goFirst, array, index, ascending);
         array[index++] = curr.data;
@@ -268,7 +250,7 @@ public class BinarySearchTree {
      * @return - array of elements in postorder traversal
      */
     public int[] toArrayPostOrder() {
-        var array = new int[this.size];
+        int[] array = new int[this.size];
         this.postOrderTraversal(this.root, array, 0);
         return array;
     }
@@ -280,7 +262,7 @@ public class BinarySearchTree {
      * @param index - current index in the array
      * @return - new index in the array
      */
-    protected int postOrderTraversal(BinaryTreeNode curr, int[] array, int index) {
+    private int postOrderTraversal(BinaryTreeNode curr, int[] array, int index) {
         if(curr == null) {
             return index;
         }
@@ -297,9 +279,9 @@ public class BinarySearchTree {
      * @return - array of elements in preorder traversal
      */
     public int[] toArrayPreOrder() {
-        var array = new int[this.size];
+        int[] array = new int[this.size];
         this.preOrderTraversal(this.root, array, 0);
-        return new int[0];
+        return array;
     }
 
     /**
@@ -310,7 +292,7 @@ public class BinarySearchTree {
      * @param index - current index in the array
      * @return - new index in the array
      */
-    protected int preOrderTraversal(BinaryTreeNode curr, int[] array, int index) {
+    private int preOrderTraversal(BinaryTreeNode curr, int[] array, int index) {
         if(curr == null) {
             return index;
         }
@@ -337,7 +319,7 @@ public class BinarySearchTree {
      * @param curr - node of which the max value should be found
      * @return - largest number stored in the tree
      */
-    protected int max(BinaryTreeNode curr) {
+    private int max(BinaryTreeNode curr) {
         if(curr == null) {
             return Integer.MIN_VALUE;
         }
@@ -366,7 +348,7 @@ public class BinarySearchTree {
      * @param curr - node of which the min value should be found
      * @return - smallest number stored in the tree
      */
-    protected int min(BinaryTreeNode curr) {
+    private int min(BinaryTreeNode curr) {
         if(curr == null) {
             return Integer.MIN_VALUE;
         }
@@ -378,13 +360,30 @@ public class BinarySearchTree {
         return curr.data;
     }
 
+    private enum NodeState {
+        LEFT, RIGHT, ONLY_LEFT
+    }
+
     /**
      * Represents the tree in a human readable form.
      * @return - string representation of the tree
      */
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        this.toString(sb, "", this.root, false);
+
+        String nodeValue = this.root == null ? "NULL" : String.valueOf(this.root.data);
+        sb.append("ROOT: ")
+            .append(nodeValue)
+            .append(System.lineSeparator());
+
+        if(this.root == null) {
+            return sb.toString();
+        }
+
+        NodeState leftNodeState = this.root.right == null ? NodeState.ONLY_LEFT : NodeState.LEFT;
+        this.toString(sb, " ", this.root.left, leftNodeState);
+        this.toString(sb, " ", this.root.right, NodeState.RIGHT);
+
         return sb.toString();
     }
 
@@ -393,24 +392,35 @@ public class BinarySearchTree {
      * @param sb - string builder to store the tree representation
      * @param prefix - prefix for the current node
      * @param curr - current node
-     * @param isLeft - true if the current node is the left child
+     * @param state - state of the current node (left, left_only, right)
      */
-    private void toString(StringBuilder sb, String prefix, BinaryTreeNode curr, boolean isLeft) {
-        String nodePath = isLeft ? "├──" : "└──";
-
-        sb.append(prefix)
-            .append(nodePath)
-            .append(isLeft ? "L: " : "R: ")
-            .append(curr == null ? "NULL" : curr.data)
-            .append(System.lineSeparator());
-
-        if(curr == null || curr.left == null && curr.right == null) {
+    private void toString(StringBuilder sb, String prefix, BinaryTreeNode curr, NodeState state) {
+        if(curr == null) {
             return;
         }
 
-        var newPrefix = prefix + (isLeft ? "│  " : "   ");
+        /*
+         * true if the current node is the left child and
+         * the right child is not null
+         */
+        boolean printLeftPath = state == NodeState.LEFT;
+        String nodePath = printLeftPath ? "├──" : "└──";
 
-        this.toString(sb, newPrefix, curr.left, true);
-        this.toString(sb, newPrefix, curr.right, false);
+        String nodeName = switch(state) {
+            case LEFT, ONLY_LEFT -> "L: ";
+            case RIGHT -> "R: ";
+        };
+
+        sb.append(prefix)
+            .append(nodePath)
+            .append(nodeName)
+            .append(curr.data)
+            .append(System.lineSeparator());
+
+        String newPrefix = prefix + (printLeftPath ? "│  " : "   ");
+
+        NodeState leftNodeState = curr.right == null ? NodeState.ONLY_LEFT : NodeState.LEFT;
+        this.toString(sb, newPrefix, curr.left, leftNodeState);
+        this.toString(sb, newPrefix, curr.right, NodeState.RIGHT);
     }
 }
