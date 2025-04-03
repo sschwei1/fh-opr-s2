@@ -153,7 +153,7 @@ public class BinarySearchTree {
             return curr.right;
         }
 
-        // Case 2: Only right child exists
+        // Case 2: Only left child exists
         if(curr.right == null) {
             return curr.left;
         }
