@@ -87,6 +87,9 @@ public class ChainingHashSetTest {
         // Force collisions (assuming size 10 table)
         set.insert(11); //
         set.insert(21);
+
+        set.insert(-105);
+
         assertEquals(0, set.getOverflowCount(0));
         assertEquals(3, set.getOverflowCount(1));
         assertEquals(1, set.getOverflowCount(2));

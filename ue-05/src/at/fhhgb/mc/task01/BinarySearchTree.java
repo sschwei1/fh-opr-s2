@@ -1,9 +1,6 @@
 package at.fhhgb.mc.task01;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class BinarySearchTree<T extends Comparable<T>> {
     /**
@@ -26,6 +23,12 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
     /** Number of elements stored in the tree. */
     protected int size;
+
+    private final Class<T> clazz;
+
+    public BinarySearchTree(Class<T> clazz) {
+        this.clazz = clazz;
+    }
 
     /**
      * Inserts the given element. Duplicate elements are not allowed.
@@ -221,23 +224,14 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     /**
-     * Generates an empty array of the same type as the root node.
-     * This is used to store the elements of the tree.
-     * (T[]) new Object[0] is safe as long as the size of the array is 0.
-     * Since we make sure that only non-null elements are inserted,
-     * this.root.data is guaranteed to be non-null when size is > 0.
+     * Generates an empty array of type T, the array is prefilled
+     * with null values.
      *
      * @return - empty array of the same type as the root node
      */
-    @SuppressWarnings({"unchecked", "DataFlowIssue"})
-    private T[] generateEmptyArray() {
-        if (this.size == 0) {
-            return (T[]) new Object[0];  // Safe for empty array
-        }
-
-        // Safe because of your non-null insertion guarantee
-        Class<?> componentType = this.root.data.getClass();
-        return (T[]) Array.newInstance(componentType, this.size);
+    @SuppressWarnings("unchecked")
+    public T[] generateEmptyArray() {
+        return (T[]) Array.newInstance(this.clazz, this.size);
     }
 
     /**

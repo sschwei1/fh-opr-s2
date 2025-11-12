@@ -37,7 +37,7 @@ public class ChainingHashSet {
      * @return - Hash code of the given value.
      */
     private int hash(int val) {
-        return val % this.array.length;
+        return Math.abs(val % this.array.length);
     }
 
     /**
